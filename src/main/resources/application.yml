@@ -1,0 +1,37 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:integrationdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+integration:
+  shopify:
+    webhook-secret: shopify_webhook_secret_dev
+  bling:
+    api-url: https://api.bling.com.br/v3
+    api-key: your_bling_api_key_here
+    failure-rate: ${BLING_FAILURE_RATE:0.3}
+
+retry:
+  max-attempts: 3
+  initial-interval-ms: 500
+  multiplier: 2.0
+
+logging:
+  level:
+    com.integration: DEBUG

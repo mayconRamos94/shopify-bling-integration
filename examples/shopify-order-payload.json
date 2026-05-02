@@ -1,0 +1,47 @@
+{
+  "id": "5678901234567",
+  "order_number": "#1042",
+  "email": "joao.silva@email.com",
+  "phone": "+5511999998888",
+  "total_price": "349.80",
+  "currency": "BRL",
+  "financial_status": "paid",
+  "fulfillment_status": null,
+  "customer": {
+    "id": "c-123456",
+    "first_name": "João",
+    "last_name": "Silva",
+    "email": "joao.silva@email.com",
+    "phone": "+5511999998888"
+  },
+  "shipping_address": {
+    "name": "João Silva",
+    "address1": "Av. Paulista, 1578",
+    "address2": "Apto 42",
+    "city": "São Paulo",
+    "province_code": "SP",
+    "zip": "01310-200",
+    "country_code": "BR",
+    "phone": "+5511999998888"
+  },
+  "line_items": [
+    {
+      "id": "li-001",
+      "product_id": "prod-789",
+      "variant_id": "var-001",
+      "sku": "CAMISETA-P-PRETA",
+      "title": "Camiseta Premium - Tamanho P - Preto",
+      "quantity": 2,
+      "price": "89.90"
+    },
+    {
+      "id": "li-002",
+      "product_id": "prod-456",
+      "variant_id": "var-002",
+      "sku": "BONE-UNISSEX",
+      "title": "Boné Unissex Snapback",
+      "quantity": 1,
+      "price": "169.99"
+    }
+  ]
+}

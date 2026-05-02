@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopify → Bling ERP · Live Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f8f9fb;
+  --white: #ffffff;
+  --border: #e5e7eb;
+  --border-light: #f0f1f3;
+  --text: #111827;
+  --text-2: #374151;
+  --muted: #6b7280;
+  --muted-light: #9ca3af;
+  --shopify-green: #008060;
+  --shopify-light: #e6f4f0;
+  --bling-orange: #e05c2a;
+  --bling-light: #fdf0eb;
+  --success: #059669;
+  --success-bg: #ecfdf5;
+  --success-border: #a7f3d0;
+  --error: #dc2626;
+  --error-bg: #fef2f2;
+  --error-border: #fecaca;
+  --warning: #d97706;
+  --warning-bg: #fffbeb;
+  --blue: #2563eb;
+  --blue-bg: #eff6ff;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.04);
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--border-light); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── HEADER ── */
+header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.logo-pill {
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.logo-pill.shopify { background: var(--shopify-light); color: var(--shopify-green); }
+.logo-pill.bling { background: var(--bling-light); color: var(--bling-orange); }
+
+.logo-arrow { color: var(--muted-light); font-size: 13px; }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #d1d5db;
+  transition: background 0.3s;
+  flex-shrink: 0;
+}
+.status-dot.online { background: var(--success); box-shadow: 0 0 0 3px rgba(5,150,105,0.15); }
+.status-dot.offline { background: var(--error); }
+
+.status-label {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-config {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-config:hover { background: var(--white); color: var(--text); border-color: #d1d5db; }
+
+/* ── LAYOUT ── */
+.layout {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-icon {
+  width: 28px; height: 28px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.card-icon.green { background: var(--shopify-light); }
+.card-icon.orange { background: var(--bling-light); }
+.card-icon.blue { background: var(--blue-bg); }
+.card-icon.gray { background: var(--bg); }
+
+.card-body { padding: 20px; }
+
+/* ── STATS ROW ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  grid-column: 1 / -1;
+}
+
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-value.green { color: var(--success); }
+.stat-value.red { color: var(--error); }
+
+.stat-sub {
+  font-size: 11px;
+  color: var(--muted-light);
+  margin-top: 4px;
+}
+
+/* ── FLOW VISUAL ── */
+.flow-card { grid-column: 1 / -1; }
+
+.flow-visual {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.flow-node {
+  flex-shrink: 0;
+  text-align: center;
+  min-width: 100px;
+}
+
+.flow-node-box {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  background: var(--white);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+  position: relative;
+  transition: all 0.3s;
+}
+
+.flow-node.active .flow-node-box {
+  border-color: var(--blue);
+  background: var(--blue-bg);
+  color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.flow-node.success .flow-node-box {
+  border-color: var(--success);
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.flow-node.error .flow-node-box {
+  border-color: var(--error);
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+.flow-node-label {
+  font-size: 10px;
+  color: var(--muted-light);
+  margin-top: 5px;
+}
+
+.flow-connector {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  position: relative;
+}
+
+.flow-line {
+  height: 1.5px;
+  background: var(--border);
+  width: 100%;
+  position: relative;
+  transition: background 0.3s;
+}
+
+.flow-line.active { background: var(--blue); }
+.flow-line.success { background: var(--success); }
+.flow-line.error { background: var(--error); }
+
+.flow-arrow-head {
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 5px solid var(--border);
+  transition: border-left-color 0.3s;
+}
+
+.flow-line.active .flow-arrow-head { border-left-color: var(--blue); }
+.flow-line.success .flow-arrow-head { border-left-color: var(--success); }
+.flow-line.error .flow-arrow-head { border-left-color: var(--error); }
+
+/* ── FORM ── */
+.form-section { }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.form-group { margin-bottom: 12px; }
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+  margin-bottom: 5px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--white);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+}
+
+.form-input.mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+/* ── ITEMS TABLE ── */
+.items-section { margin-bottom: 12px; }
+
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.items-table th {
+  text-align: left;
+  padding: 7px 10px;
+  color: var(--muted);
+  font-weight: 500;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.items-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-2);
+}
+
+.items-table tr:last-child td { border-bottom: none; }
+
+.items-table input {
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--text);
+  width: 100%;
+  outline: none;
+  padding: 0;
+}
+
+.items-table input:focus {
+  background: var(--blue-bg);
+  border-radius: 3px;
+  padding: 2px 4px;
+}
+
+.btn-add-item {
+  font-size: 12px;
+  color: var(--blue);
+  background: none;
+  border: 1px dashed var(--border);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.15s;
+  margin-top: 6px;
+}
+
+.btn-add-item:hover { background: var(--blue-bg); border-color: var(--blue); }
+
+/* ── SUBMIT BUTTON ── */
+.btn-submit {
+  width: 100%;
+  padding: 11px;
+  background: var(--shopify-green);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s;
+  margin-top: 16px;
+}
+
+.btn-submit:hover:not(:disabled) { background: #006e52; }
+.btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-submit .spinner {
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: none;
+}
+
+.btn-submit.loading .spinner { display: block; }
+.btn-submit.loading .btn-text { display: none; }
+
+/* ── RESPONSE PANEL ── */
+.response-panel {
+  margin-top: 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  display: none;
+}
+
+.response-panel.visible { display: block; }
+
+.response-header {
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.response-header.success { background: var(--success-bg); color: var(--success); border-bottom: 1px solid var(--success-border); }
+.response-header.error { background: var(--error-bg); color: var(--error); border-bottom: 1px solid var(--error-border); }
+.response-header.warning { background: var(--warning-bg); color: var(--warning); border-bottom: 1px solid #fde68a; }
+
+.response-body {
+  background: #1e1e2e;
+  padding: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: #cdd6f4;
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* ── LOGS ── */
+.logs-card { grid-column: 1 / -1; }
+
+.logs-toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-refresh {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s;
+}
+.btn-refresh:hover { background: var(--white); color: var(--text); }
+.btn-refresh.spinning svg { animation: spin 0.6s linear infinite; }
+
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+.badge.success { background: var(--success-bg); color: var(--success); }
+.badge.error { background: var(--error-bg); color: var(--error); }
+.badge.neutral { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+
+.logs-table { width: 100%; border-collapse: collapse; }
+
+.logs-table th {
+  text-align: left;
+  padding: 9px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 60px;
+}
+
+.logs-table td {
+  padding: 11px 16px;
+  font-size: 12.5px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-2);
+  vertical-align: middle;
+}
+
+.logs-table tr:last-child td { border-bottom: none; }
+
+.logs-table tr { transition: background 0.1s; }
+.logs-table tbody tr:hover { background: var(--bg); }
+
+.log-new td { animation: highlightRow 1.5s ease forwards; }
+
+@keyframes highlightRow {
+  0% { background: rgba(37,99,235,0.06); }
+  100% { background: transparent; }
+}
+
+.order-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.bling-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.attempt-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 100px;
+  font-weight: 500;
+}
+
+.attempt-pill.one { background: var(--success-bg); color: var(--success); }
+.attempt-pill.two { background: var(--warning-bg); color: var(--warning); }
+.attempt-pill.three { background: var(--error-bg); color: var(--error); }
+
+.duration {
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.time-ago {
+  font-size: 12px;
+  color: var(--muted-light);
+}
+
+.logs-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--muted);
+}
+
+.logs-empty-icon { font-size: 32px; margin-bottom: 10px; }
+.logs-empty-title { font-size: 14px; font-weight: 500; color: var(--text-2); margin-bottom: 4px; }
+.logs-empty-sub { font-size: 12px; }
+
+/* ── CONFIG MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 440px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  transform: translateY(8px);
+  transition: transform 0.2s;
+}
+
+.modal-overlay.open .modal { transform: translateY(0); }
+
+.modal-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title { font-size: 14px; font-weight: 600; }
+
+.modal-close {
+  font-size: 18px;
+  color: var(--muted);
+  cursor: pointer;
+  background: none;
+  border: none;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.modal-close:hover { background: var(--bg); }
+
+.modal-body { padding: 20px; }
+.modal-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: var(--blue);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-primary:hover { background: #1d4ed8; }
+
+.btn-secondary {
+  background: var(--bg);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-secondary:hover { background: var(--white); }
+
+.config-hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* ── INFO BANNER ── */
+.info-banner {
+  background: var(--blue-bg);
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--blue);
+  margin-bottom: 14px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .flow-card, .logs-card { grid-column: 1; }
+}
+
+@media (max-width: 600px) {
+  .stats-row { grid-template-columns: 1fr; }
+  header { padding: 0 16px; }
+  .layout { padding: 16px; }
+  .form-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- CONFIG MODAL -->
+<div class="modal-overlay" id="configModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">⚙️ Configuração da API</span>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-banner">
+        <span>ℹ️</span>
+        <span>Configure a URL do backend rodando no Railway. Deixe em branco para usar o modo demo local.</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">URL do Backend (Railway)</label>
+        <input class="form-input mono" type="text" id="apiUrlInput"
+          placeholder="https://seu-app.up.railway.app" />
+        <p class="config-hint">Ex: https://shopify-bling.up.railway.app</p>
+      </div>
+      <div class="form-group" style="margin-top: 12px;">
+        <label class="form-label">Taxa de falha simulada do Bling</label>
+        <input class="form-input" type="range" id="failureRate" min="0" max="100" value="30"
+          oninput="document.getElementById('failureRateVal').textContent = this.value + '%'"
+          style="padding: 4px 0; border: none; background: none; box-shadow: none;" />
+        <p class="config-hint">Probabilidade de falha: <strong id="failureRateVal">30%</strong> — demonstra o retry automático</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
+      <button class="btn-primary" onclick="saveConfig()">Salvar e reconectar</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-brand">
+    <div class="header-logo">
+      <span class="logo-pill shopify">Shopify</span>
+      <span class="logo-arrow">→</span>
+      <span class="logo-pill bling">Bling ERP</span>
+    </div>
+    <span style="color: var(--muted-light); font-size: 12px; margin-left: 4px;">· Live Demo</span>
+  </div>
+  <div class="header-right">
+    <div class="status-label">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">Verificando...</span>
+    </div>
+    <button class="btn-config" onclick="openModal()">⚙️ Configurar API</button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="layout">
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Total de Pedidos</div>
+      <div class="stat-value" id="statTotal">—</div>
+      <div class="stat-sub">Processados nesta sessão</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Enviados ao Bling</div>
+      <div class="stat-value green" id="statSuccess">—</div>
+      <div class="stat-sub">Com sucesso</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Falhas registradas</div>
+      <div class="stat-value red" id="statFail">—</div>
+      <div class="stat-sub">Após 3 tentativas</div>
+    </div>
+  </div>
+
+  <!-- FLOW VISUAL -->
+  <div class="card flow-card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon blue">⚡</div>
+        Fluxo em tempo real
+      </div>
+    </div>
+    <div class="flow-visual" id="flowVisual">
+      <div class="flow-node" id="flow-shopify">
+        <div class="flow-node-box">🛍 Shopify</div>
+        <div class="flow-node-label">Pedido criado</div>
+      </div>
+      <div class="flow-connector">
+        <div class="flow-line" id="line-1"><div class="flow-arrow-head"></div></div>
+      </div>
+      <div class="flow-node" id="flow-webhook">
+        <div class="flow-node-box">📡 Webhook</div>
+        <div class="flow-node-label">Recebido</div>
+      </div>
+      <div class="flow-connector">
+        <div class="flow-line" id="line-2"><div class="flow-arrow-head"></div></div>
+      </div>
+      <div class="flow-node" id="flow-validate">
+        <div class="flow-node-box">🛡 Validação</div>
+        <div class="flow-node-label">Duplicata / Schema</div>
+      </div>
+      <div class="flow-connector">
+        <div class="flow-line" id="line-3"><div class="flow-arrow-head"></div></div>
+      </div>
+      <div class="flow-node" id="flow-mapper">
+        <div class="flow-node-box">🗺 Mapper</div>
+        <div class="flow-node-label">Shopify → Bling</div>
+      </div>
+      <div class="flow-connector">
+        <div class="flow-line" id="line-4"><div class="flow-arrow-head"></div></div>
+      </div>
+      <div class="flow-node" id="flow-retry">
+        <div class="flow-node-box">🔁 Retry</div>
+        <div class="flow-node-label">Até 3x c/ backoff</div>
+      </div>
+      <div class="flow-connector">
+        <div class="flow-line" id="line-5"><div class="flow-arrow-head"></div></div>
+      </div>
+      <div class="flow-node" id="flow-bling">
+        <div class="flow-node-box">📦 Bling ERP</div>
+        <div class="flow-node-label">Pedido registrado</div>
+      </div>
+      <div class="flow-connector">
+        <div class="flow-line" id="line-6"><div class="flow-arrow-head"></div></div>
+      </div>
+      <div class="flow-node" id="flow-log">
+        <div class="flow-node-box">📋 Audit Log</div>
+        <div class="flow-node-label">Tudo registrado</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEND ORDER FORM -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon green">🛍</div>
+        Simular pedido Shopify
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="info-banner">
+        <span>💡</span>
+        <span>Preencha os dados abaixo como um pedido real do Shopify. O sistema vai processar e enviar automaticamente ao Bling ERP.</span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">ID do Pedido</label>
+          <input class="form-input mono" type="text" id="orderId" placeholder="5678901234567" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Número do Pedido</label>
+          <input class="form-input" type="text" id="orderNumber" placeholder="#1042" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nome do cliente</label>
+          <input class="form-input" type="text" id="customerName" placeholder="João Silva" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="text" id="customerEmail" placeholder="joao@email.com" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Endereço</label>
+          <input class="form-input" type="text" id="address" placeholder="Av. Paulista, 1578" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cidade / UF</label>
+          <input class="form-input" type="text" id="city" placeholder="São Paulo / SP" />
+        </div>
+      </div>
+
+      <div class="items-section">
+        <label class="form-label">Itens do pedido</label>
+        <table class="items-table" id="itemsTable">
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th style="width:60px;">SKU</th>
+              <th style="width:45px;">Qtd</th>
+              <th style="width:80px;">Preço (R$)</th>
+            </tr>
+          </thead>
+          <tbody id="itemsBody"></tbody>
+        </table>
+        <button class="btn-add-item" onclick="addItem()">+ Adicionar item</button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label class="form-label">Total do Pedido (R$)</label>
+        <input class="form-input" type="number" id="totalPrice" placeholder="349.80" step="0.01" />
+      </div>
+
+      <button class="btn-submit" id="submitBtn" onclick="sendOrder()">
+        <div class="spinner"></div>
+        <span class="btn-text">⚡ Enviar pedido para o Bling</span>
+      </button>
+
+      <div class="response-panel" id="responsePanel">
+        <div class="response-header" id="responseHeader"></div>
+        <div class="response-body" id="responseBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DUPLICATE TEST -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon orange">🧪</div>
+        Testar comportamentos
+      </div>
+    </div>
+    <div class="card-body">
+
+      <div style="margin-bottom: 20px;">
+        <p style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px;">Proteção contra duplicatas</p>
+        <p style="font-size: 12px; color: var(--muted); margin-bottom: 12px;">
+          Envie o mesmo ID de pedido duas vezes. O sistema rejeita com <code style="background:var(--bg);padding:1px 5px;border-radius:3px;font-family:monospace;font-size:11px;">409 Conflict</code> — sem duplicata no Bling.
+        </p>
+        <button class="btn-submit" style="background: var(--bling-orange);" onclick="sendDuplicate()">
+          <span class="btn-text">🔁 Enviar pedido duplicado</span>
+        </button>
+      </div>
+
+      <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;">
+
+      <div>
+        <p style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px;">Retry com backoff exponencial</p>
+        <p style="font-size: 12px; color: var(--muted); margin-bottom: 12px;">
+          Com 30% de chance de falha simulada, alguns pedidos precisarão de 2-3 tentativas. Envie vários pedidos e observe o campo "Tentativas" nos logs.
+        </p>
+        <button class="btn-submit" style="background: #7c3aed;" onclick="sendBatch()">
+          <span class="btn-text">🚀 Enviar lote de 5 pedidos</span>
+        </button>
+      </div>
+
+      <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;">
+
+      <div>
+        <p style="font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px;">Cenário Black Friday</p>
+        <p style="font-size: 12px; color: var(--muted); margin-bottom: 12px;">
+          Simula um pico de pedidos como acontece em grandes datas. Veja o sistema processando tudo automaticamente.
+        </p>
+        <button class="btn-submit" style="background: #1f2937;" onclick="sendBlackFriday()">
+          <span class="btn-text">🛒 Simular Black Friday (20 pedidos)</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LOGS -->
+  <div class="card logs-card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-icon gray">📋</div>
+        Histórico de integrações
+      </div>
+      <div class="logs-toolbar">
+        <span id="logCount" class="badge neutral">0 registros</span>
+        <button class="btn-refresh" id="refreshBtn" onclick="loadLogs()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M23 4v6h-6M1 20v-6h6"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+          Atualizar
+        </button>
+      </div>
+    </div>
+    <div id="logsContainer">
+      <div class="logs-empty">
+        <div class="logs-empty-icon">📭</div>
+        <div class="logs-empty-title">Nenhum pedido ainda</div>
+        <div class="logs-empty-sub">Envie um pedido acima para ver o histórico aqui</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── CONFIG ──
+let API_BASE = localStorage.getItem('apiBase') || '';
+let lastOrderId = null;
+let logsInterval = null;
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', () => {
+  generateOrder();
+  addItem('Camiseta Premium - Tam P', 'CAMISETA-P-PRETA', 2, 89.90);
+  addItem('Boné Unissex Snapback', 'BONE-UNISSEX', 1, 169.99);
+  document.getElementById('totalPrice').value = '349.80';
+  checkStatus();
+  loadLogs();
+  if (API_BASE) document.getElementById('apiUrlInput').value = API_BASE;
+  setInterval(checkStatus, 15000);
+  logsInterval = setInterval(loadLogs, 8000);
+});
+
+// ── HELPERS ──
+function api(path) {
+  if (!API_BASE) return null;
+  return API_BASE.replace(/\/$/, '') + path;
+}
+
+function generateId() {
+  return String(Math.floor(Math.random() * 9000000000000) + 1000000000000);
+}
+
+function generateOrder() {
+  const id = generateId();
+  const num = Math.floor(Math.random() * 9000) + 1000;
+  document.getElementById('orderId').value = id;
+  document.getElementById('orderNumber').value = '#' + num;
+  document.getElementById('customerName').value = randomName();
+  document.getElementById('customerEmail').value = 'cliente@email.com';
+  document.getElementById('address').value = 'Av. Paulista, ' + (Math.floor(Math.random() * 3000) + 100);
+  document.getElementById('city').value = 'São Paulo / SP';
+}
+
+function randomName() {
+  const first = ['Ana', 'João', 'Maria', 'Pedro', 'Carla', 'Lucas', 'Fernanda', 'Rafael'];
+  const last = ['Silva', 'Santos', 'Oliveira', 'Pereira', 'Costa', 'Lima', 'Alves'];
+  return first[Math.floor(Math.random() * first.length)] + ' ' + last[Math.floor(Math.random() * last.length)];
+}
+
+function addItem(title = '', sku = '', qty = 1, price = 0) {
+  const tbody = document.getElementById('itemsBody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" placeholder="Nome do produto" value="${title}" /></td>
+    <td><input type="text" placeholder="SKU-001" value="${sku}" style="font-family:monospace;font-size:11px;" /></td>
+    <td><input type="number" placeholder="1" value="${qty}" min="1" style="text-align:center;" /></td>
+    <td><input type="number" placeholder="0.00" value="${price || ''}" step="0.01" /></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+function buildPayload() {
+  const [city, state] = (document.getElementById('city').value + '/SP').split('/').map(s => s.trim());
+  const nameParts = document.getElementById('customerName').value.split(' ');
+
+  const items = [];
+  document.querySelectorAll('#itemsBody tr').forEach((tr, i) => {
+    const inputs = tr.querySelectorAll('input');
+    const title = inputs[0].value;
+    const sku = inputs[1].value;
+    const qty = parseInt(inputs[2].value) || 1;
+    const price = parseFloat(inputs[3].value) || 0;
+    if (title) {
+      items.push({
+        id: 'li-' + (i + 1),
+        product_id: 'prod-' + (100 + i),
+        variant_id: 'var-' + (i + 1),
+        sku: sku || 'SKU-' + (i + 1),
+        title,
+        quantity: qty,
+        price: price.toFixed(2)
+      });
+    }
+  });
+
+  return {
+    id: document.getElementById('orderId').value || generateId(),
+    order_number: document.getElementById('orderNumber').value || '#1001',
+    email: document.getElementById('customerEmail').value || 'cliente@email.com',
+    phone: '+5511999998888',
+    total_price: document.getElementById('totalPrice').value || '0.00',
+    currency: 'BRL',
+    financial_status: 'paid',
+    fulfillment_status: null,
+    customer: {
+      id: 'c-' + Date.now(),
+      first_name: nameParts[0] || 'Cliente',
+      last_name: nameParts.slice(1).join(' ') || 'Teste',
+      email: document.getElementById('customerEmail').value,
+      phone: '+5511999998888'
+    },
+    shipping_address: {
+      name: document.getElementById('customerName').value,
+      address1: document.getElementById('address').value || 'Rua Teste, 100',
+      address2: '',
+      city: city || 'São Paulo',
+      province_code: state || 'SP',
+      zip: '01310-200',
+      country_code: 'BR',
+      phone: '+5511999998888'
+    },
+    line_items: items.length ? items : [{
+      id: 'li-1', product_id: 'prod-1', variant_id: 'var-1',
+      sku: 'PRODUTO-TESTE', title: 'Produto de Teste', quantity: 1, price: '100.00'
+    }]
+  };
+}
+
+// ── STATUS CHECK ──
+async function checkStatus() {
+  if (!API_BASE) {
+    setStatus('demo', 'Modo demo — configure a API');
+    return;
+  }
+  try {
+    const r = await fetch(api('/logs/summary'), { signal: AbortSignal.timeout(5000) });
+    if (r.ok) setStatus('online', 'Backend online');
+    else setStatus('offline', 'Backend com erro');
+  } catch {
+    setStatus('offline', 'Sem conexão com o backend');
+  }
+}
+
+function setStatus(state, label) {
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  dot.className = 'status-dot ' + (state === 'online' ? 'online' : state === 'demo' ? '' : 'offline');
+  text.textContent = label;
+}
+
+// ── FLOW ANIMATION ──
+const FLOW_NODES = ['flow-shopify','flow-webhook','flow-validate','flow-mapper','flow-retry','flow-bling','flow-log'];
+const FLOW_LINES = ['line-1','line-2','line-3','line-4','line-5','line-6'];
+
+function resetFlow() {
+  FLOW_NODES.forEach(id => document.getElementById(id).className = 'flow-node');
+  FLOW_LINES.forEach(id => document.getElementById(id).className = 'flow-line');
+}
+
+async function animateFlow(success = true) {
+  resetFlow();
+  const finalClass = success ? 'success' : 'error';
+  const lineClass = success ? 'success' : 'error';
+
+  for (let i = 0; i < FLOW_NODES.length; i++) {
+    document.getElementById(FLOW_NODES[i]).className = 'flow-node active';
+    if (i > 0) document.getElementById(FLOW_LINES[i - 1]).className = 'flow-line active';
+    await sleep(220);
+
+    if (i < FLOW_NODES.length - 1) {
+      document.getElementById(FLOW_NODES[i]).className = 'flow-node success';
+      document.getElementById(FLOW_LINES[i - 1] || FLOW_LINES[0]).className = 'flow-line ' + lineClass;
+    }
+  }
+
+  FLOW_NODES.forEach(id => document.getElementById(id).className = 'flow-node ' + finalClass);
+  FLOW_LINES.forEach(id => document.getElementById(id).className = 'flow-line ' + lineClass);
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ── SEND ORDER ──
+async function sendOrder() {
+  if (!API_BASE) {
+    showNoApi();
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+  lastOrderId = document.getElementById('orderId').value;
+
+  resetFlow();
+  document.getElementById(FLOW_NODES[0]).className = 'flow-node active';
+
+  const payload = buildPayload();
+
+  try {
+    const flowPromise = animateFlow(true);
+    const r = await fetch(api('/webhook/orders'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Topic': 'orders/create',
+        'X-Shopify-Shop-Domain': 'demo.myshopify.com'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await r.json();
+    await flowPromise;
+
+    const success = data.status === 'accepted';
+    const duplicate = data.status === 'ignored';
+
+    showResponse(
+      success ? 'success' : duplicate ? 'warning' : 'error',
+      success ? '✅ Pedido enviado ao Bling com sucesso' : duplicate ? '⚠️ Pedido duplicado — rejeitado com 409' : '❌ Falha na integração',
+      JSON.stringify(data, null, 2)
+    );
+
+    if (!success) await animateFlow(false);
+    await sleep(500);
+    await loadLogs();
+    await loadStats();
+    generateOrder();
+    document.getElementById('itemsBody').innerHTML = '';
+    addItem();
+
+  } catch (e) {
+    await animateFlow(false);
+    showResponse('error', '❌ Erro ao conectar com o backend', e.message);
+  } finally {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
+}
+
+async function sendDuplicate() {
+  if (!API_BASE) { showNoApi(); return; }
+  if (!lastOrderId) {
+    alert('Envie um pedido primeiro para depois testar a duplicata.');
+    return;
+  }
+  const payload = buildPayload();
+  payload.id = lastOrderId;
+  payload.order_number = '#DUPLICADO';
+
+  try {
+    const r = await fetch(api('/webhook/orders'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Shopify-Topic': 'orders/create' },
+      body: JSON.stringify(payload)
+    });
+    const data = await r.json();
+    showResponse('warning', '⚠️ Duplicata detectada — ' + (r.status === 409 ? '409 Conflict' : r.status), JSON.stringify(data, null, 2));
+    await loadLogs();
+  } catch(e) {
+    showResponse('error', '❌ Erro', e.message);
+  }
+}
+
+async function sendBatch() {
+  if (!API_BASE) { showNoApi(); return; }
+  const names = ['Ana Costa', 'Pedro Alves', 'Maria Lima', 'Lucas Pereira', 'Fernanda Silva'];
+  const products = [
+    { title: 'Tênis Casual Branco', sku: 'TENIS-BR-42', price: 299.90 },
+    { title: 'Jaqueta Jeans Vintage', sku: 'JAQUETA-JN-M', price: 189.90 },
+    { title: 'Relógio Minimalista', sku: 'REL-MIN-01', price: 459.00 },
+    { title: 'Mochila Impermeável', sku: 'MOCHILA-IMP', price: 149.90 },
+    { title: 'Óculos de Sol UV400', sku: 'OCULOS-UV-P', price: 89.90 },
+  ];
+
+  for (let i = 0; i < 5; i++) {
+    await sleep(800);
+    const p = products[i];
+    const payload = {
+      id: generateId(),
+      order_number: '#' + (Math.floor(Math.random() * 9000) + 1000),
+      email: 'cliente@email.com',
+      phone: '+5511999998888',
+      total_price: p.price.toFixed(2),
+      currency: 'BRL',
+      financial_status: 'paid',
+      fulfillment_status: null,
+      customer: {
+        id: 'c-batch-' + i,
+        first_name: names[i].split(' ')[0],
+        last_name: names[i].split(' ')[1],
+        email: 'cliente@email.com',
+        phone: '+5511999998888'
+      },
+      shipping_address: {
+        name: names[i],
+        address1: 'Rua das Flores, ' + (i * 10 + 50),
+        address2: '',
+        city: 'São Paulo',
+        province_code: 'SP',
+        zip: '04101-300',
+        country_code: 'BR',
+        phone: '+5511999998888'
+      },
+      line_items: [{
+        id: 'li-batch-' + i,
+        product_id: 'prod-batch-' + i,
+        variant_id: 'var-batch-' + i,
+        sku: p.sku,
+        title: p.title,
+        quantity: 1,
+        price: p.price.toFixed(2)
+      }]
+    };
+
+    try {
+      await fetch(api('/webhook/orders'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Shopify-Topic': 'orders/create' },
+        body: JSON.stringify(payload)
+      });
+    } catch {}
+    await loadLogs();
+    await loadStats();
+  }
+}
+
+async function sendBlackFriday() {
+  if (!API_BASE) { showNoApi(); return; }
+  const bf_products = [
+    { title: 'Kit Skincare Premium', sku: 'KIT-SKIN-001', price: 199.90 },
+    { title: 'Fone Bluetooth Pro', sku: 'FONE-BT-PRO', price: 379.90 },
+    { title: 'Perfume Importado 100ml', sku: 'PERF-IMP-100', price: 289.00 },
+    { title: 'Smartwatch Fitness', sku: 'SW-FIT-PRO', price: 599.90 },
+    { title: 'Camisa Polo Slim', sku: 'POLO-SL-P', price: 89.90 },
+    { title: 'Tênis Running Pro', sku: 'TEN-RUN-42', price: 449.90 },
+    { title: 'Bolsa de Couro Legítimo', sku: 'BOLSA-CO-M', price: 299.00 },
+    { title: 'Anel de Prata 925', sku: 'ANEL-AG-18', price: 159.90 },
+    { title: 'Perfume Floral 50ml', sku: 'PERF-FL-50', price: 179.00 },
+    { title: 'Jaqueta de Couro', sku: 'JAQ-CO-G', price: 699.90 },
+    { title: 'Brinco de Ouro 18k', sku: 'BRINCO-AU-18', price: 329.00 },
+    { title: 'Mala Executiva', sku: 'MALA-EX-L', price: 399.90 },
+    { title: 'Caneca Térmica 500ml', sku: 'CAN-TER-500', price: 69.90 },
+    { title: 'Kit Barbear Premium', sku: 'KIT-BARB-P', price: 149.90 },
+    { title: 'Pijama de Seda', sku: 'PIJ-SE-M', price: 219.90 },
+    { title: 'Carteira de Couro', sku: 'CART-CO-P', price: 129.00 },
+    { title: 'Sapato Social Preto', sku: 'SAP-SO-42', price: 349.90 },
+    { title: 'Colar de Pérolas', sku: 'COL-PE-M', price: 259.00 },
+    { title: 'Óculos de Grau Premium', sku: 'OC-GR-RP', price: 489.00 },
+    { title: 'Chapéu Estilo Fedora', sku: 'CHAP-FED-U', price: 99.90 },
+  ];
+
+  for (let i = 0; i < 20; i++) {
+    await sleep(400);
+    const p = bf_products[i];
+    const payload = {
+      id: generateId(),
+      order_number: '#BF' + (5000 + i),
+      email: 'blackfriday@loja.com',
+      phone: '+5511999998888',
+      total_price: p.price.toFixed(2),
+      currency: 'BRL',
+      financial_status: 'paid',
+      fulfillment_status: null,
+      customer: {
+        id: 'c-bf-' + i,
+        first_name: 'Cliente',
+        last_name: 'BF ' + (i + 1),
+        email: 'blackfriday@loja.com',
+        phone: '+5511999998888'
+      },
+      shipping_address: {
+        name: 'Cliente BF ' + (i + 1),
+        address1: 'Rua Black Friday, ' + (i + 1),
+        address2: '',
+        city: 'São Paulo',
+        province_code: 'SP',
+        zip: '04101-300',
+        country_code: 'BR',
+        phone: '+5511999998888'
+      },
+      line_items: [{
+        id: 'li-bf-' + i,
+        product_id: 'prod-bf-' + i,
+        variant_id: 'var-bf-' + i,
+        sku: p.sku,
+        title: p.title,
+        quantity: 1,
+        price: p.price.toFixed(2)
+      }]
+    };
+
+    try {
+      await fetch(api('/webhook/orders'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Shopify-Topic': 'orders/create' },
+        body: JSON.stringify(payload)
+      });
+    } catch {}
+
+    if (i % 3 === 0) {
+      await loadLogs();
+      await loadStats();
+    }
+  }
+
+  await loadLogs();
+  await loadStats();
+}
+
+// ── RESPONSE DISPLAY ──
+function showResponse(type, title, body) {
+  const panel = document.getElementById('responsePanel');
+  const header = document.getElementById('responseHeader');
+  const bodyEl = document.getElementById('responseBody');
+
+  panel.classList.add('visible');
+  header.className = 'response-header ' + type;
+  header.textContent = title;
+  bodyEl.textContent = body;
+}
+
+function showNoApi() {
+  showResponse('error', '⚙️ Backend não configurado',
+    'Clique em "Configurar API" no canto superior direito\ne informe a URL do seu backend no Railway.');
+}
+
+// ── LOGS ──
+async function loadLogs() {
+  if (!API_BASE) return;
+
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spinning');
+
+  try {
+    const r = await fetch(api('/logs'));
+    if (!r.ok) return;
+    const logs = await r.json();
+    renderLogs(logs);
+    document.getElementById('logCount').textContent = logs.length + ' registro' + (logs.length !== 1 ? 's' : '');
+  } catch {
+  } finally {
+    btn.classList.remove('spinning');
+  }
+}
+
+async function loadStats() {
+  if (!API_BASE) return;
+  try {
+    const r = await fetch(api('/logs/summary'));
+    if (!r.ok) return;
+    const data = await r.json();
+    document.getElementById('statTotal').textContent = data.total;
+    document.getElementById('statSuccess').textContent = data.success;
+    document.getElementById('statFail').textContent = data.failure;
+  } catch {}
+}
+
+let knownLogIds = new Set();
+
+function renderLogs(logs) {
+  const container = document.getElementById('logsContainer');
+
+  if (!logs.length) {
+    container.innerHTML = `
+      <div class="logs-empty">
+        <div class="logs-empty-icon">📭</div>
+        <div class="logs-empty-title">Nenhum pedido ainda</div>
+        <div class="logs-empty-sub">Envie um pedido acima para ver o histórico aqui</div>
+      </div>`;
+    return;
+  }
+
+  const table = document.createElement('table');
+  table.className = 'logs-table';
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th>Pedido</th>
+        <th>Status</th>
+        <th>Bling ID</th>
+        <th>Tentativas</th>
+        <th>Duração</th>
+        <th>Horário</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  `;
+
+  const tbody = table.querySelector('tbody');
+
+  logs.forEach(log => {
+    const isNew = !knownLogIds.has(log.id);
+    if (log.id) knownLogIds.add(log.id);
+
+    const tr = document.createElement('tr');
+    if (isNew && knownLogIds.size > 1) tr.className = 'log-new';
+
+    const attempts = log.attemptNumber || 1;
+    const attemptClass = attempts === 1 ? 'one' : attempts === 2 ? 'two' : 'three';
+    const blingId = log.blingOrderId ? log.blingOrderId.substring(0, 8) + '...' : '—';
+    const time = log.executedAt ? new Date(log.executedAt).toLocaleTimeString('pt-BR') : '—';
+
+    tr.innerHTML = `
+      <td><span class="order-number">${log.orderNumber || log.shopifyOrderId?.substring(0,12) || '—'}</span></td>
+      <td><span class="badge ${log.result === 'SUCCESS' ? 'success' : 'error'}">${log.result === 'SUCCESS' ? '✓ Sucesso' : '✗ Falha'}</span></td>
+      <td><span class="bling-id">${blingId}</span></td>
+      <td><span class="attempt-pill ${attemptClass}">${attempts}x</span></td>
+      <td><span class="duration">${log.durationMs ? log.durationMs + 'ms' : '—'}</span></td>
+      <td><span class="time-ago">${time}</span></td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+
+  container.innerHTML = '';
+  container.appendChild(table);
+}
+
+// ── MODAL ──
+function openModal() {
+  document.getElementById('configModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('configModal').classList.remove('open');
+}
+
+function saveConfig() {
+  const url = document.getElementById('apiUrlInput').value.trim();
+  API_BASE = url;
+  if (url) localStorage.setItem('apiBase', url);
+  else localStorage.removeItem('apiBase');
+  closeModal();
+  checkStatus();
+  loadLogs();
+  loadStats();
+}
+
+document.getElementById('configModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>
